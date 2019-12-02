@@ -1,0 +1,6 @@
+__pycache__/
+networks/
+tmp*/
+*.h5
+*.hdf
+*.n5

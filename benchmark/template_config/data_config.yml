@@ -1,0 +1,54 @@
+# Specify the names of the datasets
+dataset_names:
+  - A
+
+# Specify how the data needs to be sliced before feeding to the network.
+# We use a 3D sliding window over the dataset to extract patches, which
+# are then fed to the network as batches.
+slicing_config:
+  # Sliding window size
+  window_size:
+    A: [32, 256, 256]
+  # Sliding window stride
+  stride: 
+    A: [4, 128, 128]
+    
+
+# Specify paths to volumes
+volume_config:
+  # Raw data
+  raw:
+    path: 
+      A: ''
+    path_in_h5_dataset:
+      A: 'volumes/raw'
+    dtype: float32
+  # Membranes
+  membranes:
+    path: 
+      A: ''
+    path_in_h5_dataset:
+      A: 'volumes/labels/neuron_ids'
+    # Specify training precision
+    dtype: float32
+
+
+# Configuration for the master dataset.
+master_config:
+  # We might need order 0 interpolation if we have segmentation in there somewhere.
+  elastic_transform:
+    alpha: 2000.
+    sigma: 50.
+    order: 0
+
+
+# Specify configuration for the loader
+loader_config:
+  # Number of processes to use for loading data. Set to (say) 10 if you wish to
+  # use 10 CPU cores, or to 0 if you wish to use the same process for training and
+  # data-loading (generally not recommended).
+  batch_size: 2
+  num_workers: 40
+  drop_last: True
+  pin_memory: True
+  shuffle: True
