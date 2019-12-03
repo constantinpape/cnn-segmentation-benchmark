@@ -1,0 +1,56 @@
+## Training
+
+1080Ti
+Total train time: 1775.7454462051392
+Mean iteration time: 1.773995467948718 +- 0.006937231335295088
+Max iteration time: 1.790623
+Min iteration time: 1.734287
+Sum iteration times: 1660.459758
+
+2080Ti
+Total train time: 3848.7249369621277
+Mean iteration time: 3.8378964745254747 +- 0.06444609757993355
+Max iteration time: 5.801634
+Min iteration time: 3.721663
+Sum iteration times: 3841.734371
+
+2080Ti MixedPrecision
+Total train time: 1418.3511831760406
+Mean iteration time: 1.4107978741258742 +- 0.08800700494397552                                      
+Max iteration time: 4.165434
+Min iteration time: 1.34856
+Sum iteration times: 1412.208672
+
+P40
+Total train time: 2118.8679370880127
+Mean iteration time: 2.1151218131868132 +- 0.029047667018486167
+Max iteration time: 2.993188
+Min iteration time: 2.093796
+Sum iteration times: 2117.236935
+
+
+## Prediction
+
+1080Ti
+Mean iteration time: 4.583811887896826 +- 0.11150085407700303
+Max iteration time: 6.497583
+Min iteration time: 2.885574
+Sum iteration times: 4620.4823830000005
+
+2080Ti
+Mean iteration time: 5.110541630952381 +- 0.13973704868922102
+Max iteration time: 6.678236
+Min iteration time: 2.796752
+Sum iteration times: 5151.425964
+
+2080Ti Mixed Precision
+Mean iteration time: 5.563936987103173 +- 0.14827050297730057
+Max iteration time: 6.838541
+Min iteration time: 2.523773
+Sum iteration times: 5608.448482999999
+
+P40
+Mean iteration time: 4.9668660962301585 +- 0.1173979470102011
+Max iteration time: 7.102993
+Min iteration time: 2.996998
+Sum iteration times: 5006.601025

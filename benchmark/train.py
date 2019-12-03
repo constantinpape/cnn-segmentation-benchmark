@@ -8,6 +8,7 @@ import time
 import yaml
 import numpy as np
 
+import torch
 from inferno.trainers.basic import Trainer
 from inferno.utils.io_utils import yaml2dict
 
@@ -109,10 +110,12 @@ def make_train_config(train_config_file, gpus):
         yaml.dump(template, f)
 
 
-def make_data_config(data_config_file, in_path, raw_key, gt_key, n_batches, workers_per_gpu=4):
+def make_data_config(data_config_file, in_path, raw_key, gt_key, n_batches,
+                     workers_per_gpu=4, mixed_precision=False):
     template = yaml2dict('./template_config/data_config.yml')
     template['volume_config']['raw']['path'] = in_path
     template['volume_config']['raw']['path_in_h5_dataset'] = raw_key
+    template['volume_config']['raw']['dtype'] = 'float16' if  mixed_precision else 'float32'
     template['volume_config']['membranes']['path'] = in_path
     template['volume_config']['membranes']['path_in_h5_dataset'] = gt_key
     template['loader_config']['batch_size'] = n_batches
@@ -137,6 +140,14 @@ def evaluate_benchmark(project_directory, t_tot):
     print("Sum iteration times:", np.sum(times))
 
 
+def save_model(project_directory):
+    weight_path = os.path.join(project_directory, 'Weights')
+    trainer = Trainer().load(weight_path)
+    model = trainer.model
+    save_path = os.path.join(project_directory, 'Weights', 'model.nn')
+    torch.save(model, save_path)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('project_directory', type=str)
@@ -152,6 +163,7 @@ def main():
     project_directory = args.project_directory
     if not os.path.exists(project_directory):
         os.mkdir(project_directory)
+    mixed_precision = bool(args.mixed_precision)
 
     # set the proper CUDA_VISIBLE_DEVICES env variables
     gpus = set_gpu_env([args.gpu])
@@ -164,14 +176,17 @@ def main():
     in_path = os.path.abspath(in_path)
     raw_key, gt_key = args.raw_key, args.gt_key
     data_config = os.path.join(project_directory, 'data_config.yml')
-    make_data_config(data_config, in_path, raw_key, gt_key, len(gpus))
+    make_data_config(data_config, in_path, raw_key, gt_key, len(gpus),
+                     mixed_precision=mixed_precision)
 
     t_tot = training(project_directory,
                      train_config,
                      data_config,
                      max_training_iters=args.n_iters,
-                     mixed_precision=bool(args.mixed_precision))
+                     mixed_precision=mixed_precision)
     evaluate_benchmark(project_directory, t_tot)
+
+    save_model(project_directory)
 
 
 if __name__ == '__main__':
